@@ -6,13 +6,15 @@ import Toast from './Toast';
 const AddTodo: React.FC = () => {
   const dispatch = useDispatch();
   const [text, setText] = useState('');
+  const [deadline, setDeadline] = useState('');
   const [showError, setShowError] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (text.trim()) {
-      dispatch(addTodo(text));
+      dispatch(addTodo({ text: text.trim(), deadline: deadline || undefined }));
       setText('');
+      setDeadline('');
     } else {
       setShowError(true);
     }
@@ -20,19 +22,32 @@ const AddTodo: React.FC = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="flex gap-2 mb-8">
-        <input
-          type="text"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Thêm công việc mới..."
-          className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <input
+            type="text"
+            value={text}
+            onChange={(e) => {
+              setText(e.target.value);
+              setShowError(false);
+            }}
+            placeholder="Thêm công việc mới..."
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <input
+            type="datetime-local"
+            value={deadline}
+            onChange={(e) => setDeadline(e.target.value)}
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
         <button
           type="submit"
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          Thêm
+          Thêm công việc
         </button>
       </form>
 

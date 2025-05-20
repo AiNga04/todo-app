@@ -1,71 +1,89 @@
-# Ứng dụng Todo với Next.js, Redux Toolkit và Tailwind CSS
+# Todo App với Next.js, Redux Toolkit và Tailwind CSS
 
-Một ứng dụng Todo hiện đại được xây dựng bằng Next.js, Redux Toolkit để quản lý state, và được tạo kiểu bằng Tailwind CSS.
+Ứng dụng quản lý công việc đơn giản được xây dựng bằng Next.js, Redux Toolkit và Tailwind CSS.
 
-## Tính năng
+## Tính năng chính
 
-- Thêm, sửa và xóa công việc
-- Đánh dấu công việc đã hoàn thành/chưa hoàn thành
-- Xác nhận trước khi xóa công việc
-- Thông báo lỗi khi thêm công việc rỗng
-- Lưu trữ dữ liệu bằng localStorage
-- Giao diện người dùng sạch sẽ và responsive
-- Hỗ trợ TypeScript
+### Quản lý công việc
+- Thêm công việc mới với nội dung và deadline tùy chọn
+- Chỉnh sửa nội dung và deadline của công việc
+- Xóa công việc với xác nhận
+- Đánh dấu hoàn thành công việc với xác nhận
+- Hiển thị thời điểm tạo và hoàn thành công việc
 
-## Yêu cầu hệ thống
+### Deadline và thời gian
+- Thêm deadline cho công việc (tùy chọn)
+- Validation deadline:
+  - Không thể đặt deadline trước thời điểm tạo công việc
+  - Không thể đặt deadline trước thời điểm hiện tại
+  - Deadline phải sau thời điểm hiện tại ít nhất 1 phút
+- Hiển thị trạng thái deadline:
+  - Xanh: Còn hạn
+  - Vàng: Sắp hết hạn (trong vòng 24h)
+  - Đỏ: Quá hạn
+- Hiển thị trạng thái hoàn thành:
+  - "Hoàn thành đúng hạn": Hoàn thành trước deadline
+  - "Hoàn thành trễ": Hoàn thành sau deadline
 
-- Node.js phiên bản 14.x trở lên
-- npm hoặc yarn
+### Lọc và phân trang
+- Lọc công việc theo trạng thái:
+  - Tất cả
+  - Đã hoàn thành
+  - Chưa hoàn thành
+- Phân trang:
+  - 15 công việc mỗi trang
+  - Điều hướng giữa các trang
+  - Hiển thị số trang hiện tại và tổng số trang
 
-## Cài đặt
+### Lưu trữ và giao diện
+- Tự động lưu dữ liệu vào localStorage
+- Giao diện responsive với Tailwind CSS
+- Modal xác nhận cho các hành động quan trọng
+- Thông báo lỗi rõ ràng khi:
+  - Thêm công việc rỗng
+
+## Cài đặt và chạy
 
 1. Clone repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/AiNga04/todo-app.git
 cd todo-app
 ```
 
-2. Cài đặt các dependencies:
+2. Cài đặt dependencies:
 ```bash
 npm install
 # hoặc
 yarn install
 ```
 
-## Chạy ứng dụng
-
-1. Khởi động server phát triển:
+3. Chạy ứng dụng:
 ```bash
 npm run dev
 # hoặc
 yarn dev
 ```
 
-2. Mở [http://localhost:3000](http://localhost:3000) trong trình duyệt để xem ứng dụng.
-
-## Ghi chú kỹ thuật
-
-- Ứng dụng sử dụng Redux Toolkit để quản lý state
-- Dữ liệu todo được lưu trữ trong localStorage
-- Giao diện được xây dựng bằng Tailwind CSS với thiết kế hiện đại và responsive
-- Sử dụng TypeScript để đảm bảo tính type-safe
-- Các component được tổ chức theo cấu trúc module để dễ bảo trì
-- Xử lý hydration với Next.js để tránh lỗi SSR
+4. Mở [http://localhost:3000](http://localhost:3000) trong trình duyệt
 
 ## Cấu trúc dự án
 
 ```
 src/
   ├── app/
-  │   ├── components/
-  │   │   ├── AddTodo.tsx     # Component thêm công việc mới
-  │   │   ├── TodoItem.tsx    # Component hiển thị một công việc
+  │   ├── components/          # Các component của ứng dụng
+  │   │   ├── AddTodo.tsx     # Component thêm công việc mới (cũ)
+  │   │   ├── TodoForm.tsx    # Component form thêm công việc mới
+  │   │   ├── TodoItem.tsx    # Component hiển thị và quản lý một công việc
   │   │   ├── TodoList.tsx    # Component hiển thị danh sách công việc
-  │   │   ├── ConfirmModal.tsx # Modal xác nhận xóa
+  │   │   ├── TodoFilter.tsx  # Component lọc công việc
+  │   │   ├── Pagination.tsx  # Component phân trang
+  │   │   ├── ConfirmModal.tsx # Modal xác nhận các hành động
   │   │   └── Toast.tsx       # Component hiển thị thông báo
-  │   ├── store/
+  │   ├── store/              # Quản lý state với Redux
   │   │   ├── store.ts        # Cấu hình Redux store
-  │   │   └── todoSlice.ts    # Redux slice cho todo
+  │   │   └── todoSlice.ts    # Redux slice quản lý state todo
+  │   ├── globals.css         # CSS toàn cục
   │   ├── page.tsx            # Trang chính của ứng dụng
   │   └── layout.tsx          # Layout chung
   └── ...
@@ -73,36 +91,44 @@ src/
 
 ## Công nghệ sử dụng
 
-- **Next.js**: Framework React hiện đại
+- **Next.js**: Framework React
 - **Redux Toolkit**: Quản lý state
-- **Tailwind CSS**: Tạo kiểu và responsive
-- **TypeScript**: Đảm bảo type safety
-- **localStorage**: Lưu trữ dữ liệu cục bộ
+- **Tailwind CSS**: Styling và responsive
+- **TypeScript**: Type safety
+- **localStorage**: Lưu trữ dữ liệu
 
 ## Hướng dẫn sử dụng
 
-1. **Thêm công việc mới**:
-   - Nhập nội dung vào ô input
-   - Nhấn nút "Thêm" hoặc Enter
-   - Nếu để trống, sẽ hiển thị thông báo lỗi
+### Thêm công việc mới
+1. Nhập nội dung công việc
+2. (Tùy chọn) Chọn deadline
+   - Deadline phải sau thời điểm hiện tại ít nhất 1 phút
+3. Nhấn "Thêm" hoặc Enter
+4. Nếu có lỗi (nội dung rỗng hoặc deadline không hợp lệ), thông báo lỗi sẽ hiển thị
+
+### Quản lý công việc
+1. **Chỉnh sửa**:
+   - Nhấn nút "Sửa"
+   - Cập nhật nội dung và/hoặc deadline
+   - Nhấn "Lưu" để cập nhật
 
 2. **Đánh dấu hoàn thành**:
-   - Click vào checkbox bên trái công việc
-   - Công việc hoàn thành sẽ được gạch ngang và đổi màu
+   - Click vào checkbox
+   - Xác nhận trong modal
+   - Công việc sẽ hiển thị:
+     - Thời điểm hoàn thành
+     - Trạng thái hoàn thành (đúng hạn/trễ hạn)
 
-3. **Sửa công việc**:
-   - Nhấn nút "Sửa"
-   - Chỉnh sửa nội dung
-   - Nhấn "Lưu" để cập nhật thay đổi
-
-4. **Xóa công việc**:
+3. **Xóa**:
    - Nhấn nút "Xóa"
-   - Xác nhận trong modal hiện ra
-   - Nhấn "Xóa" để xác nhận hoặc "Hủy" để đóng
+   - Xác nhận trong modal
 
-## Tính năng bổ sung
+### Lọc và phân trang
+1. **Lọc**:
+   - Sử dụng các nút: Tất cả/Đã hoàn thành/Chưa hoàn thành
+   - Danh sách sẽ tự động cập nhật
 
-- **Xác nhận xóa**: Modal xác nhận trước khi xóa công việc
-- **Thông báo lỗi**: Toast message khi thêm công việc rỗng
-- **Lưu trữ tự động**: Dữ liệu được tự động lưu vào localStorage
-- **Responsive**: Giao diện thích ứng với mọi kích thước màn hình
+2. **Phân trang**:
+   - Mỗi trang hiển thị 15 công việc
+   - Sử dụng nút "Trước" và "Sau" để điều hướng
+   - Hiển thị số trang hiện tại và tổng số trang
