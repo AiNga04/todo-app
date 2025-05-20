@@ -167,7 +167,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
           ) : (
             <div className="flex-1">
               <span
-                className={`text-gray-800 ${
+                className={`text-gray-700 ${
                   todo.completed ? 'line-through text-gray-400' : ''
                 }`}
               >
