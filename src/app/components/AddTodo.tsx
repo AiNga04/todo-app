@@ -7,17 +7,35 @@ const AddTodo: React.FC = () => {
   const dispatch = useDispatch();
   const [text, setText] = useState('');
   const [deadline, setDeadline] = useState('');
-  const [showError, setShowError] = useState(false);
+  const [showTextError, setShowTextError] = useState(false);
+  const [showDeadlineError, setShowDeadlineError] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (text.trim()) {
-      dispatch(addTodo({ text: text.trim(), deadline: deadline || undefined }));
-      setText('');
-      setDeadline('');
-    } else {
-      setShowError(true);
+    setShowTextError(false);
+    setShowDeadlineError(false);
+
+    if (!text.trim()) {
+      setShowTextError(true);
+      return;
     }
+
+    if (deadline) {
+      const now = new Date();
+      const selectedDeadline = new Date(deadline);
+
+      // Adjust 'now' to the nearest minute for comparison with datetime-local input
+      now.setSeconds(0, 0);
+
+      if (selectedDeadline < now) {
+        setShowDeadlineError(true);
+        return;
+      }
+    }
+
+    dispatch(addTodo({ text: text.trim(), deadline: deadline || undefined }));
+    setText('');
+    setDeadline('');
   };
 
   return (
@@ -29,7 +47,7 @@ const AddTodo: React.FC = () => {
             value={text}
             onChange={(e) => {
               setText(e.target.value);
-              setShowError(false);
+              setShowTextError(false);
             }}
             placeholder="Thêm công việc mới..."
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -39,7 +57,10 @@ const AddTodo: React.FC = () => {
           <input
             type="datetime-local"
             value={deadline}
-            onChange={(e) => setDeadline(e.target.value)}
+            onChange={(e) => {
+              setDeadline(e.target.value);
+              setShowDeadlineError(false);
+            }}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -51,11 +72,19 @@ const AddTodo: React.FC = () => {
         </button>
       </form>
 
-      {showError && (
+      {showTextError && (
         <Toast
           message="Vui lòng nhập nội dung công việc!"
           type="error"
-          onClose={() => setShowError(false)}
+          onClose={() => setShowTextError(false)}
+        />
+      )}
+
+      {showDeadlineError && (
+        <Toast
+          message="Hạn chót không được là thời điểm trong quá khứ!"
+          type="error"
+          onClose={() => setShowDeadlineError(false)}
         />
       )}
     </>
